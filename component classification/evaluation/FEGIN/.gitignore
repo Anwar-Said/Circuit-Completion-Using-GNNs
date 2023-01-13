@@ -1,0 +1,12 @@
+data/
+!data/EXP/
+!data/CEXP/
+backup/
+results/
+software/
+!software/k-gnn/
+*results.txt
+*.swp
+*.pyc
+screenlog.*
+tmp_vis.png
