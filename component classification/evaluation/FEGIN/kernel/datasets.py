@@ -16,11 +16,14 @@ import numpy as np
 import networkx as nx
 
 class MyOwnDataset(InMemoryDataset):
-    def __init__(self, root, h, max_nodes_per_hop, node_label, use_rd,transform=None, pre_transform=None, pre_filter=None):
+    def __init__(self, root, name,h, max_nodes_per_hop, node_label, use_rd,transform=None, pre_transform=None, pre_filter=None):
+        self.h,self.max_nodes_per_hop, self.node_label, self.use_rd,self.name = h,max_nodes_per_hop, node_label, use_rd,name
         super().__init__(root, transform, pre_transform, pre_filter)
+        
         self.data, self.slices = torch.load(self.processed_paths[0])
-        self.h,self.max_nodes_per_hop, self.node_label, self.use_rd = h,max_nodes_per_hop, node_label, use_rd
-
+        
+        
+        
 #     @property
 #     def raw_file_names(self):
 #         return ['ltspice_examples_torch.pt']
@@ -28,7 +31,7 @@ class MyOwnDataset(InMemoryDataset):
 
     @property
     def processed_file_names(self):
-        return ['ltspice_examples_dataset.pt']
+        return [self.name+'_dataset.pt']
 
 #     def download(self):
 #         # Download to `self.raw_dir`.
@@ -40,10 +43,10 @@ class MyOwnDataset(InMemoryDataset):
 #         data_list = [...]
         print("processing data now!")
         # data_list = [torch.load('data/kicad_github_torch_LP.pt')]
-        with open("data/ltspice_examples_GC.pkl",'rb') as f:
+        with open("data/"+self.name+"_GC.pkl",'rb') as f:
             data = pickle.load(f)
             f.close()
-        with open('data/ltspice_examples_label_mapping.pkl', 'rb') as f:
+        with open('data/'+self.name+'_label_mapping.pkl', 'rb') as f:
             mapping = pickle.load(f)
             f.close()
         
