@@ -233,8 +233,6 @@ def trainFEGIN( dataset,dataset_name,
         train_dataset,train_des, test_dataset, test_des = [],[],[],[]
         for index, d in enumerate(dataset):
             if d.set=='train':
-                train_des = torch.load('data/ltspice_examples_netlsd_train.pt')
-                test_des = torch.load('data/ltspice_examples_netlsd_test.pt')
                 des = (torch.tensor(netlsd.heat(to_networkx(d, to_undirected = True)))*0.1).float()
                 des_d = Data(x = des, edge_index = d.edge_index, y = d.y)
                 train_dataset.append(d)
@@ -248,8 +246,8 @@ def trainFEGIN( dataset,dataset_name,
                 test_des.append(des_d)
                 test_dataset.append(d)
     
-            torch.save(train_des,'data/'+dataset_name+'_netlsd_train.pt')
-            torch.save(test_des,'data/'+dataset_name+'_netlsd_test.pt')
+        torch.save(train_des,'data/'+dataset_name+'_netlsd_train.pt')
+        torch.save(test_des,'data/'+dataset_name+'_netlsd_test.pt')
             
     
     train_dataset, train_des = shuffle(train_dataset, train_des)
@@ -296,7 +294,6 @@ def trainFEGIN( dataset,dataset_name,
             )
             # pbar.set_description(log)
             print(log)
-            
             if epoch % lr_decay_step_size == 0:
                 for param_group in optimizer.param_groups:
                     param_group['lr'] = lr_decay_factor * param_group['lr']
