@@ -1,4 +1,4 @@
-FEGIN implementation combined with Nested Graph Neural Networks and other baselines
+"Circuit Design Completion using Graph Neural Networks" implementation combined with Nested Graph Neural Networks and other baselines
 
 
 requirements
@@ -8,6 +8,9 @@ requirements
 4 - netlsd (pip install netlsd)
 
 
-running model
+running the model...
 
 python main.py
+
+
+

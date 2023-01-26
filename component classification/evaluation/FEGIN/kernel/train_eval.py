@@ -13,7 +13,7 @@ from torch_geometric.data import Data
 import pdb
 from sklearn.metrics import roc_auc_score,f1_score
 from dataloader import DataLoader  # replace with custom dataloader to handle subgraphs
-import dgsd,netlsd
+import netlsd
 import pickle
 import random
 import os
@@ -235,10 +235,7 @@ def trainFEGIN( dataset,dataset_name,
             if d.set=='train':
                 train_des = torch.load('data/ltspice_examples_netlsd_train.pt')
                 test_des = torch.load('data/ltspice_examples_netlsd_test.pt')
-
                 des = (torch.tensor(netlsd.heat(to_networkx(d, to_undirected = True)))*0.1).float()
-                # g = to_networkx(d, to_undirected = True)
-                # des = torch.ones(1, 250).view(-1) * 0.1
                 des_d = Data(x = des, edge_index = d.edge_index, y = d.y)
                 train_dataset.append(d)
                 train_des.append(des_d)
@@ -247,23 +244,20 @@ def trainFEGIN( dataset,dataset_name,
 
             else:
                 des = (torch.tensor(netlsd.heat(to_networkx(d, to_undirected = True)))*0.1).float()
-                # g = to_networkx(d, to_undirected = True)
-                # des = torch.ones(1, 250).view(-1) * 0.1
                 des_d = Data(x = des, edge_index = d.edge_index, y = d.y)
                 test_des.append(des_d)
                 test_dataset.append(d)
     
             torch.save(train_des,'data/'+dataset_name+'_netlsd_train.pt')
             torch.save(test_des,'data/'+dataset_name+'_netlsd_test.pt')
-            # train_des = torch.load('data/ltspice_examples_netlsd_train.pt')
-            # test_des = torch.load('data/ltspice_examples_netlsd_test.pt')
+            
     
     train_dataset, train_des = shuffle(train_dataset, train_des)
 
     t_start = time.perf_counter()
     # print(len(train_dataset), len(train_des), len(test_dataset), len(test_des))
     test_losses_itr, accs_itr, f1_itr = [], [], []
-    for i in range(5):
+    for i in range(10):
         print(f'##################ITERATION #{i} ****************************************')
         model.to(device).reset_parameters()
         optimizer = Adam(model.parameters(), lr=lr, weight_decay=weight_decay)
