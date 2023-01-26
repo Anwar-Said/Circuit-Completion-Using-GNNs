@@ -43,7 +43,7 @@ warnings.showwarning = warn_with_traceback
 file_names = ['ltspice_examples','ltspice_demos','kicad_github']
 for dataset_name in file_names:
 # General settings.
-    parser = argparse.ArgumentParser(description='Nested GNN for TU graphs')
+    parser = argparse.ArgumentParser(description='GNN for component identification in netlists')
     parser.add_argument('--data', type=str, default=dataset_name)
     parser.add_argument('--clean', action='store_true', default=False,
                         help='use a cleaned version of dataset by removing isomorphism')
@@ -104,27 +104,13 @@ for dataset_name in file_names:
     print('Results will be saved in ' + args.res_dir)
     if not os.path.exists(args.res_dir):
         os.makedirs(args.res_dir) 
-    # if not args.keep_old:
-    #     # backup current main.py, model.py files
-    #     copy('run_tu.py', args.res_dir)
-    #     copy('utils.py', args.res_dir)
-    #     copy('kernel/train_eval.py', args.res_dir)
-    #     copy('kernel/datasets.py', args.res_dir)
-    #     copy('kernel/gcn.py', args.res_dir)
-    #     copy('kernel/gat.py', args.res_dir)
-    #     copy('kernel/graph_sage.py', args.res_dir)
-    #     copy('kernel/gin.py', args.res_dir)
-    # # save command line input
     cmd_input = 'python ' + ' '.join(sys.argv) + '\n'
     with open(os.path.join(args.res_dir, 'cmd_input.txt'), 'a') as f:
         f.write(cmd_input)
     print('Command line input: ' + cmd_input + ' is saved.')
 
-    if args.data == 'all':
-        datasets = ['MUTAG', 'PROTEINS', 'PTC_MR', 'ENZYMES']
-        # datasets = ['REDDIT-BINARY','REDDIT-MULTI-5K']
-    else:
-        datasets = [args.data]
+    
+    datasets = [args.data]
     if args.search:
         if args.h is None:
             layers = [2, 3, 4, 5]
@@ -169,9 +155,6 @@ for dataset_name in file_names:
         else:
             combinations = product(layers, hiddens, hs)
         for num_layers, hidden, h in combinations:
-            if dataset_name == 'DD' and Net.__name__ == 'NestedGAT' and h >= 5:
-                print('NestedGAT on DD will OOM for h >= 5. Skipped.')
-                continue
             log = "Using {} layers, {} hidden units, h = {}".format(num_layers, hidden, h)
             print(log)
             logger(log)
@@ -229,4 +212,4 @@ for dataset_name in file_names:
     print(cmd_input[:-1])
     print(log)
     logger(log)
-    # break
+    break
